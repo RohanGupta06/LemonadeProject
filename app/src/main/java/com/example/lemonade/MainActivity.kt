@@ -33,18 +33,25 @@ class MainActivity : AppCompatActivity() {
     private val LEMONADE_STATE = "LEMONADE_STATE"
     private val LEMON_SIZE = "LEMON_SIZE"
     private val SQUEEZE_COUNT = "SQUEEZE_COUNT"
+
     // SELECT represents the "pick lemon" state
     private val SELECT = "select"
+
     // SQUEEZE represents the "squeeze lemon" state
     private val SQUEEZE = "squeeze"
+
     // DRINK represents the "drink lemonade" state
     private val DRINK = "drink"
+
     // RESTART represents the state where the lemonade has be drunk and the glass is empty
     private val RESTART = "restart"
+
     // Default the state to select
     private var lemonadeState = "select"
+
     // Default lemonSize to -1
     private var lemonSize = -1
+
     // Default the squeezeCount to -1
     private var squeezeCount = -1
 
@@ -93,31 +100,27 @@ class MainActivity : AppCompatActivity() {
      * This method determines the state and proceeds with the correct action.
      */
     private fun clickLemonImage() {
-       if(lemonadeState == SELECT)
-        {
-            val sz = lemonTree.pick()
-            lemonSize = sz
-            squeezeCount=0
-            lemonadeState = SQUEEZE
-        }
-        else if(lemonadeState == SQUEEZE)
-        {
-            if(lemonSize==0)
-            {
-                lemonadeState = DRINK
-                lemonSize=-1
+        when (lemonadeState) {
+            SELECT -> {
+                val sz = lemonTree.pick()
+                lemonSize = sz
+                squeezeCount = 0
+                lemonadeState = SQUEEZE
             }
+            SQUEEZE -> {
+                if (lemonSize == 0) {
+                    lemonadeState = DRINK
+                    lemonSize = -1
+                }
                 squeezeCount++
                 lemonSize--
-
-        }
-        else if(lemonadeState==DRINK)
-        {
-            lemonadeState=RESTART
-        }
-        else
-        {
-            lemonadeState=SELECT
+            }
+            DRINK -> {
+                lemonadeState = RESTART
+            }
+            else -> {
+                lemonadeState = SELECT
+            }
         }
         setViewElements()
 
@@ -130,25 +133,23 @@ class MainActivity : AppCompatActivity() {
     private fun setViewElements() {
         val textAction: TextView = findViewById(R.id.text_action)
         //val imageAction: ImageView = findViewById(R.id.imageView)
-        if(lemonadeState==SELECT)
-        {
-            textAction.text = "Click to select a lemon!"
-            lemonImage!!.setImageResource(R.drawable.lemon_tree)
-        }
-        else if(lemonadeState==SQUEEZE)
-        {
-            textAction.text="Click to juice the lemon!"
-            lemonImage!!.setImageResource(R.drawable.lemon_squeeze)
-        }
-        else if(lemonadeState==DRINK)
-        {
-            textAction.text="Click to drink your lemonade!"
-            lemonImage!!.setImageResource(R.drawable.lemon_drink)
-        }
-        else
-        {
-            textAction.text="Click to start again!"
-            lemonImage!!.setImageResource(R.drawable.lemon_restart)
+        when(lemonadeState) {
+            SELECT -> {
+                textAction.text = "Click to select a lemon!"
+                lemonImage!!.setImageResource(R.drawable.lemon_tree)
+            }
+            SQUEEZE -> {
+                textAction.text = "Click to juice the lemon!"
+                lemonImage!!.setImageResource(R.drawable.lemon_squeeze)
+            }
+            DRINK -> {
+                textAction.text = "Click to drink your lemonade!"
+                lemonImage!!.setImageResource(R.drawable.lemon_drink)
+            }
+            else -> {
+                textAction.text = "Click to start again!"
+                lemonImage!!.setImageResource(R.drawable.lemon_restart)
+            }
         }
 
         // TODO: set up a conditional that tracks the lemonadeState
